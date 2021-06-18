@@ -19,7 +19,6 @@ import {
     deepEquals,
     get,
     has,
-    merge,
     set,
     unset,
 } from '@/utils'
@@ -55,7 +54,7 @@ export default class FormularioForm extends Vue {
     private localFormErrors: string[] = []
 
     private get fieldsErrorsComputed (): Record<string, string[]> {
-        return merge(this.fieldsErrors || {}, this.localFieldsErrors)
+        return { ...this.fieldsErrors, ...this.localFieldsErrors }
     }
 
     private get formErrorsComputed (): string[] {

@@ -83,7 +83,7 @@ export function typeOf (value: unknown): string {
             return 'InstanceOf<' + value.constructor.name + '>'
     }
 
-    throw new Error()
+    throw new Error('[Formulario] typeOf - unknown type detected')
 }
 
 export function isRecordLike (value: unknown): boolean {
