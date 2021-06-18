@@ -17,7 +17,7 @@ describe('Formulario', () => {
         expect(wrapper.vm.$formulario).toBeInstanceOf(Formulario)
     })
 
-    it ('pushes Formulario instance to child a component', () => {
+    test('pushes Formulario instance to child a component', () => {
         const localVue = createLocalVue()
 
         localVue.use(plugin)
@@ -35,7 +35,7 @@ describe('Formulario', () => {
         expect(parent.vm.$formulario === child.vm.$formulario).toBe(true)
     })
 
-    it ('does not push Formulario instance to a child component, if it has its own', () => {
+    test('does not push Formulario instance to a child component, if it has its own', () => {
         const localVue = createLocalVue()
 
         localVue.use(plugin)
