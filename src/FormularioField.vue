@@ -20,6 +20,7 @@ import {
     ValidationRuleFn,
     ValidationMessageI18NFn,
     Violation,
+    Constraint,
 } from '@/validation/validator'
 
 import {
@@ -54,7 +55,7 @@ export default class FormularioField extends Vue {
         validator: (name: unknown): boolean => typeof name === 'string' && name.length > 0,
     }) name!: string
 
-    @Prop({ default: '' }) validation!: string|any[]
+    @Prop({ default: '' }) validation!: string|(Constraint|[Constraint, ...unknown[]])[]
     @Prop({ default: () => ({}) }) validationRules!: Record<string, ValidationRuleFn>
     @Prop({ default: () => ({}) }) validationMessages!: Record<string, ValidationMessageI18NFn|string>
     @Prop({
@@ -184,9 +185,9 @@ export default class FormularioField extends Vue {
             this.$formulario.getRules(this.normalizedValidationRules),
             this.$formulario.getMessages(this, this.normalizedValidationMessages),
         ), {
+            path: this.fullPath,
             value: this.proxy,
-            name: this.fullPath,
-            formValues: this.__FormularioForm_getState(),
+            state: this.__FormularioForm_getState(),
         })
     }
 

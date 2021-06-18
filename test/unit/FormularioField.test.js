@@ -134,9 +134,9 @@ describe('FormularioField', () => {
                 rule: 'required',
                 args: expect.any(Array),
                 context: {
-                    name: 'field',
+                    path: 'field',
+                    state: {},
                     value: '',
-                    formValues: {},
                 },
                 message: expect.any(String),
             }],

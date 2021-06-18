@@ -175,9 +175,9 @@ describe('FormularioForm', () => {
                 rule: 'required',
                 args: [],
                 context: {
-                    name: 'address.street',
+                    path: 'address.street',
                     value: '',
-                    formValues: state,
+                    state,
                 },
             }],
             'address.building': [{
@@ -185,9 +185,9 @@ describe('FormularioForm', () => {
                 rule: 'required',
                 args: [],
                 context: {
-                    name: 'address.building',
+                    path: 'address.building',
                     value: '',
-                    formValues: state,
+                    state,
                 },
             }],
         })
@@ -222,9 +222,9 @@ describe('FormularioForm', () => {
                 rule: 'required',
                 args: [],
                 context: {
-                    name: 'address.street',
+                    path: 'address.street',
                     value: '',
-                    formValues: state,
+                    state,
                 },
             }],
             'address.building': [{
@@ -232,9 +232,9 @@ describe('FormularioForm', () => {
                 rule: 'required',
                 args: [],
                 context: {
-                    name: 'address.building',
+                    path: 'address.building',
                     value: '',
-                    formValues: state,
+                    state,
                 },
             }],
         })
@@ -391,9 +391,9 @@ describe('FormularioForm', () => {
                     rule: expect.any(String),
                     args: ['foo'],
                     context: {
+                        path: 'foo',
                         value: 'bar',
-                        formValues: expect.any(Object),
-                        name: 'foo',
+                        state: expect.any(Object),
                     },
                     message: expect.any(String),
                 } ],

@@ -3,7 +3,7 @@ import Formulario from '@/Formulario.ts'
 import plugin from '@/index.ts'
 
 describe('Formulario', () => {
-    it('installs on vue instance', () => {
+    test('installs on vue instance', () => {
         const localVue = createLocalVue()
 
         localVue.use(plugin)

@@ -106,7 +106,7 @@ export default class Formulario {
         const messages: Record<string, ValidationMessageFn> = {}
 
         for (const name in raw) {
-            messages[name] = (context: ValidationContext, ...args: any[]): string => {
+            messages[name] = (context: ValidationContext, ...args: unknown[]): string => {
                 return typeof raw[name] === 'string' ? raw[name] : raw[name](vm, context, ...args)
             }
         }

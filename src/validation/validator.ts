@@ -1,35 +1,39 @@
 import { has, snakeToCamel } from '@/utils'
 
+export type Constraint = Validator|string
+
 export interface Validator {
     (context: ValidationContext): Promise<Violation|null>;
 }
 
 export interface Violation {
-    message: string;
-    rule: string|null;
-    args: any[];
+    rule: ValidationRuleName|null;
+    args: unknown[];
     context: ValidationContext|null;
+    message: string;
 }
 
 export interface ValidationRuleFn {
-    (context: ValidationContext, ...args: any[]): Promise<boolean>|boolean;
+    (context: ValidationContext, ...args: unknown[]): Promise<boolean>|boolean;
 }
 
+export type ValidationRuleName = string
+
 export interface ValidationMessageFn {
-    (context: ValidationContext, ...args: any[]): string;
+    (context: ValidationContext, ...args: unknown[]): string;
 }
 
 export interface ValidationMessageI18NFn {
-    (vm: Vue, context: ValidationContext, ...args: any[]): string;
+    (vm: Vue, context: ValidationContext, ...args: unknown[]): string;
 }
 
 export interface ValidationContext {
-    // The value of the field (do not mutate!),
-    value: any;
+    // Field path
+    path: string;
+    // Field value (do not mutate!),
+    value: unknown;
     // If wrapped in a FormulateForm, the value of other form fields.
-    formValues: Record<string, any>;
-    // The validation name to be used
-    name: string;
+    state: Record<string, unknown>;
 }
 
 export type ValidatorGroup = {
@@ -40,7 +44,7 @@ export type ValidatorGroup = {
 export function createValidator (
     ruleFn: ValidationRuleFn,
     ruleName: string|null,
-    ruleArgs: any[],
+    ruleArgs: unknown[],
     messageFn: ValidationMessageFn
 ): Validator {
     return (context: ValidationContext): Promise<Violation|null> => {
@@ -63,7 +67,7 @@ export function parseModifier (ruleName: string): [string, string|null] {
 }
 
 export function processSingleArrayConstraint (
-    constraint: any[],
+    constraint: [Constraint, ...unknown[]],
     rules: Record<string, ValidationRuleFn>,
     messages: Record<string, ValidationMessageFn>
 ): [Validator, string|null, string|null] {
@@ -71,7 +75,7 @@ export function processSingleArrayConstraint (
     const first = args.shift()
 
     if (typeof first === 'function') {
-        return [first, null, null]
+        return [first as Validator, null, null]
     }
 
     if (typeof first !== 'string') {
@@ -121,12 +125,12 @@ export function processSingleStringConstraint (
 }
 
 export function processSingleConstraint (
-    constraint: Validator|string|[Validator|string, ...any[]],
-    rules: Record<string, ValidationRuleFn>,
-    messages: Record<string, ValidationMessageFn>
+    constraint: Constraint|[Constraint, ...unknown[]],
+    rules: Record<ValidationRuleName, ValidationRuleFn>,
+    messages: Record<ValidationRuleName, ValidationMessageFn>
 ): [Validator, string|null, string|null] {
     if (typeof constraint === 'function') {
-        return [constraint, null, null]
+        return [constraint as Validator, null, null]
     }
 
     if (Array.isArray(constraint) && constraint.length) {
@@ -141,16 +145,18 @@ export function processSingleConstraint (
 }
 
 export function processConstraints (
-    constraints: string|any[],
+    constraints: string|(Constraint|[Constraint, ...unknown[]])[],
     rules: Record<string, ValidationRuleFn>,
     messages: Record<string, ValidationMessageFn>
 ): [Validator, string|null, string|null][] {
     if (typeof constraints === 'string') {
         return processConstraints(constraints.split('|').filter(f => f.length), rules, messages)
     }
+
     if (!Array.isArray(constraints)) {
         return []
     }
+
     return constraints.map(constraint => processSingleConstraint(constraint, rules, messages))
 }
 

@@ -13,8 +13,8 @@ const isNumberAndInRangeMessage = ({ value }, from, to) => {
 }
 
 describe('createValidator', () => {
-    it ('Creates correct validator', async () => {
-        const context = { value: 'abc', formValues: {}, name: 'field' }
+    test('Creates correct validator', async () => {
+        const context = { state: {}, path: 'field', value: 'abc' }
         const validate = createValidator(
             isNumberAndInRangeRule,
             'rule',
@@ -42,7 +42,7 @@ describe('createValidator', () => {
 })
 
 describe('enlarge', () => {
-    it ('Merges non-bail validator groups', () => {
+    test('Merges non-bail validator groups', () => {
         expect(enlarge([
             { validators: [], bail: false },
             { validators: [], bail: false },
@@ -52,7 +52,7 @@ describe('enlarge', () => {
         ])
     })
 
-    it ('Merges non-bail validator groups, bail groups stayed unmerged', () => {
+    test('Merges non-bail validator groups, bail groups stayed unmerged', () => {
         expect(enlarge([
             { validators: [], bail: false },
             { validators: [], bail: false },
@@ -71,7 +71,7 @@ describe('enlarge', () => {
 })
 
 describe('parseModifier', () => {
-    it ('Extracts modifier if present', () => {
+    test('Extracts modifier if present', () => {
         expect(parseModifier('^required')).toEqual(['required', '^'])
         expect(parseModifier('required')).toEqual(['required', null])
         expect(parseModifier('bail')).toEqual(['bail', null])
@@ -84,7 +84,7 @@ describe('processSingleArrayConstraint', () => {
     const rules = { isNumberAndInRange: isNumberAndInRangeRule }
     const messages = { isNumberAndInRange: isNumberAndInRangeMessage }
 
-    it ('Creates validator context if constraint is valid and rule exists', () => {
+    test('Creates validator context if constraint is valid and rule exists', () => {
         expect(processSingleArrayConstraint(['isNumberAndInRange', 1, 2], rules, messages)).toEqual([
             expect.any(Function),
             'isNumberAndInRange',
@@ -98,7 +98,7 @@ describe('processSingleArrayConstraint', () => {
         ])
     })
 
-    it ('Creates validator context if constraint is validator', () => {
+    test('Creates validator context if constraint is validator', () => {
         const validate = createValidator(
             isNumberAndInRangeRule,
             null,
@@ -113,7 +113,7 @@ describe('processSingleArrayConstraint', () => {
         ])
     })
 
-    it ('Throws error if constraint is valid and rule not exists', () => {
+    test('Throws error if constraint is valid and rule not exists', () => {
         expect(() => processSingleArrayConstraint(
             ['^rule_that_not_exists'],
             { rule: isNumberAndInRangeRule },
@@ -121,7 +121,7 @@ describe('processSingleArrayConstraint', () => {
         )).toThrow('[Formulario] Can\'t create validator for constraint: [\"^rule_that_not_exists\"]')
     })
 
-    it ('Throws error if constraint is not valid', () => {
+    test('Throws error if constraint is not valid', () => {
         expect(() => processSingleArrayConstraint(
             [null],
             { rule: isNumberAndInRangeRule },
@@ -134,7 +134,7 @@ describe('processSingleStringConstraint', () => {
     const rules = { isNumberAndInRange: isNumberAndInRangeRule }
     const messages = { isNumberAndInRange: isNumberAndInRangeMessage }
 
-    it ('Creates validator context if constraint is valid and rule exists', () => {
+    test('Creates validator context if constraint is valid and rule exists', () => {
         expect(processSingleStringConstraint('isNumberAndInRange:1,2', rules, messages)).toEqual([
             expect.any(Function),
             'isNumberAndInRange',
@@ -148,7 +148,7 @@ describe('processSingleStringConstraint', () => {
         ])
     })
 
-    it ('Throws error if constraint is valid and rule not exists', () => {
+    test('Throws error if constraint is valid and rule not exists', () => {
         expect(() => processSingleStringConstraint(
             '^rule_that_not_exists',
             { rule: isNumberAndInRangeRule },
@@ -170,9 +170,9 @@ describe('validate', () => {
         [],
         () => 'Value is required'
     )
-    const context = { value: '', formValues: {}, name: 'field' }
+    const context = { path: 'field', value: '', state: {} }
 
-    it('Applies all rules if no bail', async () => {
+    test('Applies all rules if no bail', async () => {
         expect(await validate([
             [isRequired, 'required', null],
             [isNumber, 'number', null],
@@ -189,7 +189,7 @@ describe('validate', () => {
         }])
     })
 
-    it('Applies only first rule (bail)', async () => {
+    test('Applies only first rule (bail)', async () => {
         expect(await validate([
             [() => {}, 'bail', null],
             [isRequired, 'required', '^'],
@@ -202,7 +202,7 @@ describe('validate', () => {
         }])
     })
 
-    it('Applies only first rule (bail modifier)', async () => {
+    test('Applies only first rule (bail modifier)', async () => {
         expect(await validate([
             [isRequired, 'required', '^'],
             [isNumber, 'number', null],
@@ -214,7 +214,7 @@ describe('validate', () => {
         }])
     })
 
-    it('No violations on valid context', async () => {
+    test('No violations on valid context', async () => {
         expect(await validate([
             [isRequired, 'required', '^'],
             [isNumber, 'number', null],

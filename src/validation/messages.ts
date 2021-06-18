@@ -20,7 +20,7 @@ const messages: Record<string, ValidationMessageI18NFn> = {
         return vm.$t('validation.accepted', context)
     },
 
-    after (vm: Vue, context: ValidationContext, compare: string | false = false): string {
+    after (vm: Vue, context: ValidationContext, compare): string {
         if (typeof compare === 'string' && compare.length) {
             return vm.$t('validation.after.compare', context)
         }
@@ -36,7 +36,7 @@ const messages: Record<string, ValidationMessageI18NFn> = {
         return vm.$t('validation.alphanumeric', context)
     },
 
-    before (vm: Vue, context: ValidationContext, compare: string|false = false): string {
+    before (vm: Vue, context: ValidationContext, compare): string {
         if (typeof compare === 'string' && compare.length) {
             return vm.$t('validation.before.compare', context)
         }
@@ -44,10 +44,10 @@ const messages: Record<string, ValidationMessageI18NFn> = {
         return vm.$t('validation.before.default', context)
     },
 
-    between (vm: Vue, context: ValidationContext, from: number|any = 0, to: number|any = 10, force?: string): string {
+    between (vm: Vue, context: ValidationContext, from, to, force?): string {
         const data = { ...context, from, to }
 
-        if ((!isNaN(context.value) && force !== 'length') || force === 'value') {
+        if ((!Number.isNaN(context.value) && force !== 'length') || force === 'value') {
             return vm.$t('validation.between.force', data)
         }
 
@@ -58,7 +58,7 @@ const messages: Record<string, ValidationMessageI18NFn> = {
         return vm.$t('validation.confirm', context)
     },
 
-    date (vm: Vue, context: ValidationContext, format: string | false = false): string {
+    date (vm: Vue, context: ValidationContext, format: unknown): string {
         if (typeof format === 'string' && format.length) {
             return vm.$t('validation.date.format', context)
         }
@@ -86,24 +86,24 @@ const messages: Record<string, ValidationMessageI18NFn> = {
         return vm.$t('validation.matches.default', context)
     },
 
-    max (vm: Vue, context: ValidationContext, maximum: string | number = 10, force?: string): string {
+    max (vm: Vue, context: ValidationContext, maximum, force?): string {
         if (Array.isArray(context.value)) {
             return vm.$tc('validation.max.array', maximum, context)
         }
 
-        if ((!isNaN(context.value) && force !== 'length') || force === 'value') {
+        if ((!isNaN(context.value as number) && force !== 'length') || force === 'value') {
             return vm.$tc('validation.max.force', maximum, context)
         }
 
         return vm.$tc('validation.max.default', maximum, context)
     },
 
-    min (vm: Vue, context: ValidationContext, minimum: number | any = 1, force?: string): string {
+    min (vm: Vue, context: ValidationContext, minimum, force?): string {
         if (Array.isArray(context.value)) {
             return vm.$tc('validation.min.array', minimum, context)
         }
 
-        if ((!isNaN(context.value) && force !== 'length') || force === 'value') {
+        if ((!isNaN(context.value as number) && force !== 'length') || force === 'value') {
             return vm.$tc('validation.min.force', minimum, context)
         }
 

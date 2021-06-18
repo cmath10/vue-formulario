@@ -1,7 +1,7 @@
 import merge from '@/utils/merge.ts'
 
 describe('merge', () => {
-    it('Can merge simple object', () => {
+    test('Can merge simple object', () => {
         expect(merge({
             optionA: true,
             optionB: '1234',
@@ -13,7 +13,7 @@ describe('merge', () => {
         })
     })
 
-    it('Can add to simple array', () => {
+    test('Can add to simple array', () => {
         expect(merge({
             optionA: true,
             optionB: ['first', 'second']
@@ -25,7 +25,7 @@ describe('merge', () => {
         })
     })
 
-    it('Can merge recursively', () => {
+    test('Can merge recursively', () => {
         expect(merge({
             optionA: true,
             optionC: {
